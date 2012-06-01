@@ -27,6 +27,8 @@ namespace NuiDeviceFramework.devices
         private const int BlueIndex = 0;
         private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
 
+
+
         public Kinect()
         {
             foreach (var potentialSensor in KinectSensor.KinectSensors)
@@ -148,6 +150,8 @@ namespace NuiDeviceFramework.devices
                         NuiSkeletonTrackingState nts = (NuiSkeletonTrackingState)s.TrackingState;
                         myNuiSkeletonData[i] = new NuiSkeleton(nboc, fe, nsp, trackingId, nts, njc);
                     }
+
+                    skeletonLastModified = System.DateTime.Now.TimeOfDay;
                 }
             }
         }

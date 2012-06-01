@@ -10,6 +10,7 @@ namespace NuiDeviceFramework.devices
     {
         // Skeleton data constants
         protected NuiSkeleton[] myNuiSkeletonData;
+        protected TimeSpan skeletonLastModified;
 
         protected Boolean supportsColorData = false;
         protected Boolean supportsDepthData = false;
@@ -78,6 +79,14 @@ namespace NuiDeviceFramework.devices
             get
             {
                 return this.myNuiSkeletonData;
+            }
+        }
+
+        public TimeSpan SkeletonLastModified
+        {
+            get
+            {
+                return this.skeletonLastModified;
             }
         }
 
