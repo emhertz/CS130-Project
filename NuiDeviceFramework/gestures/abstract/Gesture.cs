@@ -26,6 +26,11 @@ namespace NuiDeviceFramework.Gestures
             return streams;
         }
 
+        public void ResetGesture()
+        {
+            gestureDetected = false;
+        }
+
         protected Gesture(NuiDevice d)
         {
             this.device = d;

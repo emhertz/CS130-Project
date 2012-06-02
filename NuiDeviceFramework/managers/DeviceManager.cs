@@ -9,15 +9,26 @@ namespace NuiDeviceFramework.managers
 {
     public static class DeviceManager
     {
-        private static NuiDevice device;
+        private static object deviceObject;
 
-        public static NuiDevice GetConnection(String deviceName, String dll)
+        public static object GetConnection(String deviceName, String dll)
         {
-            Assembly assembly = Assembly.LoadFile(dll);
-            Type type = assembly.GetType(deviceName);
+            //Assembly assembly = Assembly.LoadFile(dll);
+            Assembly assembly = Assembly.LoadFrom(dll);
+            Type[] types = assembly.GetTypes();
+            Type type = null;
 
-            device = (NuiDevice)Activator.CreateInstance(type);
-            return device;
+            foreach (Type t in types)
+            {
+                if (t.FullName.Equals(deviceName))
+                {
+                    type = t;
+                    break;
+                }
+            }
+
+            deviceObject = Activator.CreateInstance(type);
+            return deviceObject;
         }
     }
 }

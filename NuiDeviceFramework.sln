@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuiDeviceFramework", "NuiDeviceFramework\NuiDeviceFramework.csproj", "{5F5741AF-BB52-47A1-9E75-29B49EB9FFC3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.csproj", "{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{5F5741AF-BB52-47A1-9E75-29B49EB9FFC3}.Debug|x86.Build.0 = Debug|x86
 		{5F5741AF-BB52-47A1-9E75-29B49EB9FFC3}.Release|x86.ActiveCfg = Release|x86
 		{5F5741AF-BB52-47A1-9E75-29B49EB9FFC3}.Release|x86.Build.0 = Release|x86
+		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Debug|x86.ActiveCfg = Debug|x86
+		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Debug|x86.Build.0 = Debug|x86
+		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Release|x86.ActiveCfg = Release|x86
+		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

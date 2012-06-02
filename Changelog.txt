@@ -1,0 +1,19 @@
+2012-06-01  Justin Morgan  <jjmorgan@ucla.edu>
+
+* Gesture1.cs (Class Gesture1): Implemented gesture SwipeLeft
+
+* Gesture.cs (ResetGesture): Added public function to reset gesture after detection
+
+* GestureManager.cs (getCompletedGestures): Modified to reset gesture after detecting an intent
+
+* NuiDevice.cs (Class NuiDevice): Added update time buffer skeletonLastModified
+
+* Kinect.cs (SkeletonImageReady): Added line to update time buffer per retrieved skeleton frame
+
+2012-05-27  Eric Hertz  (eric4jsa@gmail.com)
+
+* Created project skeleton, added components NuiDevice, DeviceManager, GestureManager
+
+* Integrated Microsoft Kinect SDK
+
+* Wrote Kinect driver support for color, depth, and skeleton streams

@@ -27,7 +27,9 @@ namespace NuiDeviceFramework.devices
         private const int BlueIndex = 0;
         private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
 
-        public Kinect()
+
+
+        public Kinect() : base()
         {
             foreach (var potentialSensor in KinectSensor.KinectSensors)
             {
@@ -44,8 +46,11 @@ namespace NuiDeviceFramework.devices
                 this.sensor.SkeletonStream.Enable();
 
                 this.supportsSkeletonData = this.sensor.SkeletonStream.IsEnabled;
+                this.streams[(int)NuiStreamTypes.SkeletonData] = this.supportsSkeletonData;
                 this.supportsColorData = this.sensor.ColorStream.IsEnabled;
+                this.streams[(int)NuiStreamTypes.ColorData] = this.supportsColorData;
                 this.supportsDepthData = this.sensor.DepthStream.IsEnabled;
+                this.streams[(int)NuiStreamTypes.DepthData] = this.supportsDepthData;
 
                 this.sensor.DepthFrameReady += this.DepthImageReady;
                 this.sensor.ColorFrameReady += this.ColorImageReady;
@@ -139,6 +144,7 @@ namespace NuiDeviceFramework.devices
                         NuiJointCollection njc = new NuiJointCollection();
                         for (JointType j = 0; j < (JointType)s.Joints.Count; j++)
                         {
+                            System.Console.WriteLine("Loop index {0}", j);
                             Joint jt = s.Joints[j];
                             NuiJoint nj = new NuiJoint((NuiJointType)jt.JointType, new NuiSkeletonPoint(jt.Position.X, jt.Position.Y, jt.Position.Z), (NuiJointTrackingState)jt.TrackingState);
                             njc[(NuiJointType)j] = nj;
@@ -148,6 +154,8 @@ namespace NuiDeviceFramework.devices
                         NuiSkeletonTrackingState nts = (NuiSkeletonTrackingState)s.TrackingState;
                         myNuiSkeletonData[i] = new NuiSkeleton(nboc, fe, nsp, trackingId, nts, njc);
                     }
+
+                    skeletonLastModified = System.DateTime.Now.TimeOfDay;
                 }
             }
         }
