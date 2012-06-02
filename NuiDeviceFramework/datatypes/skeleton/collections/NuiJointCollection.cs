@@ -11,7 +11,12 @@ namespace NuiDeviceFramework.datatypes
     [ComVisibleAttribute(false)]
     public class NuiJointCollection : IEnumerable
     {
-        private List<NuiJoint> joints = new List<NuiJoint>();
+        private List<NuiJoint> joints;
+
+        public NuiJointCollection()
+        {
+            joints = new List<NuiJoint>(500);
+        }
 
         public NuiJoint this[NuiJointType jointType] { get { return this.joints[(int)jointType]; } set { this.joints[(int)jointType] = value;} }
         public int Count

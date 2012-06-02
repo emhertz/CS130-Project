@@ -69,10 +69,11 @@
     <Compile Include="devices\implementations\Kinect.cs" />
     <Compile Include="devices\abstract\NuiDevice.cs" />
     <Compile Include="gestures\abstract\Gesture.cs" />
-    <Compile Include="gestures\implementations\Gesture1.cs" />
+    <Compile Include="gestures\implementations\SwipeLeft.cs" />
     <Compile Include="managers\GestureManager.cs" />
     <Compile Include="managers\DeviceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="reflection\ReflectionUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
