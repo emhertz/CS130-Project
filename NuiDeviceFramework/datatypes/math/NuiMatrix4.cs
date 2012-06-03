@@ -41,12 +41,30 @@ namespace NuiDeviceFramework.datatypes
 
         public bool Equals(NuiMatrix4 aMatrix)
         {
-            // your code here
-            return false;
+            return this.M11 == aMatrix.M11
+                && this.M12 == aMatrix.M12
+                && this.M13 == aMatrix.M13
+                && this.M14 == aMatrix.M14
+                && this.M21 == aMatrix.M21
+                && this.M22 == aMatrix.M22
+                && this.M23 == aMatrix.M23
+                && this.M24 == aMatrix.M24
+                && this.M31 == aMatrix.M31
+                && this.M32 == aMatrix.M32
+                && this.M33 == aMatrix.M33
+                && this.M34 == aMatrix.M34
+                && this.M41 == aMatrix.M41
+                && this.M42 == aMatrix.M42
+                && this.M43 == aMatrix.M43
+                && this.M44 == aMatrix.M44;
         }
 
         public override bool Equals(object anObject)
         {
+            if (anObject is NuiMatrix4)
+            {
+                return this.Equals((NuiMatrix4)anObject);
+            }
             return false;
         }
 
@@ -57,12 +75,12 @@ namespace NuiDeviceFramework.datatypes
 
         public static bool op_Equality(NuiMatrix4 mat1, NuiMatrix4 mat2)
         {
-            return false;
+            return mat1.Equals(mat2);
         }
 
         public static bool op_Inequality(NuiMatrix4 mat1, NuiMatrix4 mat2)
         {
-            return false;
+            return ! mat1.Equals(mat2);
         }
     }
 }

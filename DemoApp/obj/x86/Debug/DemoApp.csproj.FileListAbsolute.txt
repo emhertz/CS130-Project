@@ -1,7 +1,7 @@
-C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\bin\Debug\DemoApp.exe
 C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\bin\Debug\DemoApp.pdb
-C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\DemoApp.exe
-C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\DemoApp.pdb
 C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\bin\Debug\NuiDeviceFramework.dll
 C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\bin\Debug\NuiDeviceFramework.pdb
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\DemoApp.exe
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\DemoApp\obj\x86\Debug\DemoApp.pdb

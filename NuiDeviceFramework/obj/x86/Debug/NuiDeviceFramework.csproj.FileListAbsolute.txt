@@ -1,6 +1,6 @@
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.dll.config
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.dll
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.pdb
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\ResolveAssemblyReference.cache
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\NuiDeviceFramework.dll
-c:\users\eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\NuiDeviceFramework.pdb
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.dll.config
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.dll
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\bin\Debug\NuiDeviceFramework.pdb
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\NuiDeviceFramework.dll
+C:\Users\Eric\documents\visual studio 2010\Projects\NuiDeviceFramework\NuiDeviceFramework\obj\x86\Debug\NuiDeviceFramework.pdb

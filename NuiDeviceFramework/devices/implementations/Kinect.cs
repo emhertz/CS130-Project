@@ -144,7 +144,6 @@ namespace NuiDeviceFramework.devices
                         NuiJointCollection njc = new NuiJointCollection();
                         for (JointType j = 0; j < (JointType)s.Joints.Count; j++)
                         {
-                            System.Console.WriteLine("Loop index {0}", j);
                             Joint jt = s.Joints[j];
                             NuiJoint nj = new NuiJoint((NuiJointType)jt.JointType, new NuiSkeletonPoint(jt.Position.X, jt.Position.Y, jt.Position.Z), (NuiJointTrackingState)jt.TrackingState);
                             njc[(NuiJointType)j] = nj;

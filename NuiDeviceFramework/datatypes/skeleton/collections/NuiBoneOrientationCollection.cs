@@ -9,10 +9,28 @@ namespace NuiDeviceFramework.datatypes
 {
     public class NuiBoneOrientationCollection : IEnumerable
     {
-        private List<NuiBoneOrientation> orientations = new List<NuiBoneOrientation>();
+        private List<NuiBoneOrientation> orientations;
+
+        public NuiBoneOrientationCollection()
+        {
+            orientations = new List<NuiBoneOrientation>(500);
+        }
 
         public int Count { get { return this.orientations.Count;} }
-        public NuiBoneOrientation this[NuiJointType jointType] { get { return this.orientations[(int)jointType]; } set { this.orientations[(int)jointType] = value; } }
+        public NuiBoneOrientation this[NuiJointType jointType] 
+        { 
+            get 
+            { 
+                return this.orientations[(int)jointType]; 
+            }
+            set
+            {
+                if ((int)jointType < this.orientations.Capacity)
+                {
+                    this.orientations.Insert(((int)jointType), value);
+                }
+            } 
+        }
 
         public IEnumerator GetEnumerator()
         {
