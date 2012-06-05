@@ -14,6 +14,9 @@ namespace NuiDeviceFramework.devices
         // Skeleton data constants
         private Skeleton[] mySkeletonData;
 
+        // Audio constants
+        private KinectAudioSource audioSource;
+
         private DepthImageFormat lastImageFormat; 
         private ColorImageFormat lastColorImageFormat;
 
@@ -64,6 +67,12 @@ namespace NuiDeviceFramework.devices
                 this.colorPixelData = new byte[this.sensor.ColorStream.FramePixelDataLength];
 
                 this.sensor.Start();
+
+                this.audioSource = this.sensor.AudioSource;
+                audioSource.BeamAngleMode = BeamAngleMode.Adaptive;
+                this.audioStream = audioSource.Start();
+                this.supportsAudioData = true;
+                this.streams[(int)NuiStreamTypes.AudioData] = this.supportsAudioData;
             }
         }
 
