@@ -3,6 +3,7 @@ using System.Windows.Media.Imaging;
 using NuiDeviceFramework.datatypes;
 using NuiDeviceFramework.datatypes.skeleton.enums;
 using NuiDeviceFramework.datatypes.constants;
+using System.IO;
 
 namespace NuiDeviceFramework.devices
 {
@@ -18,6 +19,9 @@ namespace NuiDeviceFramework.devices
         protected Boolean supportsAudioData = false;
 
         protected Boolean[] streams = new Boolean[NuiConstants.NUM_STREAMS];
+
+        // Audio data contants
+        protected Stream audioStream;
 
         // Depth image data constants
         protected short[] pixelData;
@@ -87,6 +91,14 @@ namespace NuiDeviceFramework.devices
             get
             {
                 return this.skeletonLastModified;
+            }
+        }
+
+        public Stream AudioStream
+        {
+            get
+            {
+                return this.audioStream;
             }
         }
 

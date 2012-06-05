@@ -1,7 +1,10 @@
 ﻿using System;
 using NuiDeviceFramework.datatypes.skeleton.enums;
+using NuiDeviceFramework.gestures.implementations;
+using NuiDeviceFramework.Gestures;
 using NuiDeviceFramework.managers;
 using NuiDeviceFramework.reflection;
+using System.Collections.Generic;
 
 namespace DemoApp
 {
@@ -30,6 +33,46 @@ namespace DemoApp
                     Console.WriteLine("Device {0} supports stream type {1}", deviceName, s);
                 }
             }
+
+            List<string> myWords = new List<string> { "hello", "computer", "action" };
+
+            GestureManager gm = new GestureManager(device);
+            Gesture audioGesture = new AudioGesture(device);
+            foreach (string w in myWords)
+            {
+                ((AudioGesture)audioGesture).AddWord(w);
+            }
+
+            if (!gm.Add(audioGesture))
+            {
+                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
+                Environment.Exit(-1);
+            }
+
+            Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
+
+            Console.WriteLine("Now the GestureManager will start listening for input.");
+            gm.Start();
+            List<Gesture> completedGestures;
+            for (; ; )
+            {
+                completedGestures = gm.getCompletedGestures();
+                if (completedGestures.Count == 0)
+                {
+                    //Console.WriteLine("No gesture detected this frame.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            foreach (Gesture ge in completedGestures)
+            {
+                Console.WriteLine("Gesture {0} successfully detected!", ge);
+            }
+
+            Console.WriteLine("The program will now exit.");
         }
     }
 }

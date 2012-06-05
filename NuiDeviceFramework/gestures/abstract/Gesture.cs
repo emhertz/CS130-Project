@@ -9,9 +9,9 @@ namespace NuiDeviceFramework.Gestures
 {
     public abstract class Gesture 
     {
-        protected NuiStreamTypes[] streams;
+        protected List<NuiStreamTypes> streams;
         protected Boolean gestureDetected = false;
-        protected NuiDevice device;
+        protected object device;
 
         public Boolean GestureDetected
         {
@@ -21,7 +21,7 @@ namespace NuiDeviceFramework.Gestures
             }
         }
 
-        public NuiStreamTypes[] getNecessaryStreams()
+        public List<NuiStreamTypes> getNecessaryStreams()
         {
             return streams;
         }
@@ -31,9 +31,10 @@ namespace NuiDeviceFramework.Gestures
             gestureDetected = false;
         }
 
-        protected Gesture(NuiDevice d)
+        protected Gesture(object d)
         {
             this.device = d;
+            streams = new List<NuiStreamTypes>();
         }
 
         public abstract void Start();

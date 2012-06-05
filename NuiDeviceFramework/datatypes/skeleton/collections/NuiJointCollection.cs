@@ -18,11 +18,26 @@ namespace NuiDeviceFramework.datatypes
             joints = new List<NuiJoint>(500);
         }
 
-        public NuiJoint this[NuiJointType jointType] { get { return this.joints[(int)jointType]; } set { this.joints[(int)jointType] = value;} }
+        public NuiJoint this[NuiJointType jointType] 
+        { 
+            get 
+            { 
+                return this.joints[(int)jointType]; 
+            } 
+            set 
+            {
+                if ((int)jointType < this.joints.Capacity)
+                {
+                    this.joints.Insert(((int)jointType), value);
+                }
+            } 
+        }
+
         public int Count
         {
             get { return this.joints.Count; }
         }
+
         public IEnumerator GetEnumerator()
         {
             return new NuiJointEnumerator(this);
