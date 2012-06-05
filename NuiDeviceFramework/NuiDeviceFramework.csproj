@@ -11,8 +11,7 @@
     <RootNamespace>NuiDeviceFramework</RootNamespace>
     <AssemblyName>NuiDeviceFramework</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -39,6 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.Speech\11.0.0.0__31bf3856ad364e35\Microsoft.Speech.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -69,6 +72,7 @@
     <Compile Include="devices\implementations\Kinect.cs" />
     <Compile Include="devices\abstract\NuiDevice.cs" />
     <Compile Include="gestures\abstract\Gesture.cs" />
+    <Compile Include="gestures\implementations\AudioGesture.cs" />
     <Compile Include="gestures\implementations\SwipeLeft.cs" />
     <Compile Include="managers\GestureManager.cs" />
     <Compile Include="managers\DeviceManager.cs" />

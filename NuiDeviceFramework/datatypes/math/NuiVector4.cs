@@ -57,14 +57,20 @@ namespace NuiDeviceFramework.datatypes
             }
         }
 
-        public bool Equals(NuiVector4 aMatrix)
+        public bool Equals(NuiVector4 aVector)
         {
-            // your code here
-            return false;
+            return this.X == aVector.X
+                && this.Y == aVector.Y
+                && this.Z == aVector.Z
+                && this.W == aVector.W;
         }
 
         public override bool Equals(object anObject)
         {
+            if (anObject is NuiVector4)
+            {
+                return this.Equals((NuiVector4)anObject);
+            }
             return false;
         }
 
@@ -73,14 +79,14 @@ namespace NuiDeviceFramework.datatypes
             return base.GetHashCode();
         }
 
-        public static bool op_Equality(NuiVector4 mat1, NuiVector4 mat2)
+        public static bool op_Equality(NuiVector4 vec1, NuiVector4 vec2)
         {
-            return false;
+            return vec1.Equals(vec2);
         }
 
-        public static bool op_Inequality(NuiVector4 mat1, NuiVector4 mat2)
+        public static bool op_Inequality(NuiVector4 vec1, NuiVector4 vec2)
         {
-            return false;
+            return ! vec1.Equals(vec2);
         }
     }
 }

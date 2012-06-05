@@ -6,6 +6,7 @@ using System.Threading;
 using NuiDeviceFramework.Gestures;
 using NuiDeviceFramework.devices;
 using NuiDeviceFramework.datatypes.skeleton.enums;
+using NuiDeviceFramework.reflection;
 
 namespace NuiDeviceFramework.managers
 {
@@ -14,7 +15,7 @@ namespace NuiDeviceFramework.managers
         private List<Gesture> gestures = new List<Gesture>();
         private List<Boolean> gesturesCompleted = new List<Boolean>();
         private List<Thread> gestureThreads = new List<Thread>();
-        private NuiDevice device;
+        private object device;
         private Boolean running;
 
         public Boolean IsRunning
@@ -25,7 +26,7 @@ namespace NuiDeviceFramework.managers
             }
         }
 
-        public GestureManager(NuiDevice d)
+        public GestureManager(object d)
         {
             this.device = d;
         }
@@ -45,7 +46,8 @@ namespace NuiDeviceFramework.managers
         {
             foreach (NuiStreamTypes s in g.getNecessaryStreams())
             {
-                if (! device.supportsStreamType(s))
+                object val = ReflectionUtilities.InvokeMethod(device, "supportsStreamType", new object[]{s});
+                if (val is bool && (! (bool)val) )
                 {
                     return false;
                 }
