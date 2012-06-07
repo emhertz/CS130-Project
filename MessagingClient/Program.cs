@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Messaging;
 using NuiDeviceFramework.datatypes.skeleton.enums;
-using NuiDeviceFramework.gestures.implementations;
-using NuiDeviceFramework.Gestures;
 using NuiDeviceFramework.managers;
 using NuiDeviceFramework.reflection;
-using System.Collections.Generic;
-using System.Messaging;
+using NuiDeviceFramework.Gestures;
+using NuiDeviceFramework.gestures.implementations;
 
-namespace DemoApp
+namespace MessagingClient
 {
     class Program
     {
@@ -51,8 +53,9 @@ namespace DemoApp
             return;
         }
 
-        public static void ReceiveMessage(string queuePath)
+        public static string ReceiveMessage(string queuePath)
         {
+            string message = "";
             try
             {
                 // Connect to the a queue on the local computer.
@@ -61,7 +64,7 @@ namespace DemoApp
                 // Receive and format the message. 
                 System.Messaging.Message myMessage = myQueue.Receive();
                 myMessage.Formatter = new BinaryMessageFormatter();
-                string message = (string)myMessage.Body;
+                message = (string)myMessage.Body;
 
                 Console.WriteLine("message received: {0}", message);
 
@@ -83,29 +86,28 @@ namespace DemoApp
                 Console.WriteLine(e.Message);
             }
 
-            return;
+            return message;
         }
-
 
         static void RunMessagingApplication()
         {
-            Console.WriteLine("Welcome to the Cisco Kinect Team 1 Demo Application (Messaging Version).");
-            Console.WriteLine("First, we will set up a connection to the Kinect.");
-            string recvQueuePath = ".\\Private$\\sendQueue";
-            string sendQueuePath = ".\\Private$\\recvQueue";
+            Console.WriteLine("Welcome to the recipient!");
+            string recvQueuePath = ".\\Private$\\recvQueue";
+            string sendQueuePath = ".\\Private$\\sendQueue";
+            string message;
+            string ack = "ACK";
             CreateQueue(recvQueuePath);
             CreateQueue(sendQueuePath);
-            SendMessage(sendQueuePath, "Kinect");
-            ReceiveMessage(recvQueuePath);
-            SendMessage(sendQueuePath, "AudioGesture");
-            ReceiveMessage(recvQueuePath);
-            ReceiveMessage(recvQueuePath);
-        }
+            Console.WriteLine("Welcome to the Cisco Kinect Team 1 Demo Application. (Messaging Version)");
+            message = ReceiveMessage(recvQueuePath);
+            SendMessage(sendQueuePath, ack);
 
-        static void RunStandaloneTestApplication()
-        {
-            Console.WriteLine("Welcome to the Cisco Kinect Team 1 Demo Application.");
-            Console.WriteLine("First, we will set up a connection to the Kinect.");
+            Console.WriteLine("First, we will set up a connection to the {0}.", message);
+            if (message != "Kinect")
+            {
+                Console.WriteLine("Unknown device name {0].", message);
+                Environment.Exit(-1);
+            }
             String deviceName = "NuiDeviceFramework.devices.Kinect";
             String dllPath = "C:\\Users\\Eric\\Documents\\Visual Studio 2010\\Projects\\NuiDeviceFramework\\NuiDeviceFramework\\bin\\Debug\\NuiDeviceFramework.dll";
             object device = DeviceManager.GetConnection(deviceName, dllPath);
@@ -117,7 +119,7 @@ namespace DemoApp
             }
 
             NuiStreamTypes s = NuiStreamTypes.ColorData;
-            for (; s <= NuiStreamTypes.AudioData; s++)
+            for (; s <= NuiStreamTypes.ObjectData; s++)
             {
                 object val = ReflectionUtilities.InvokeMethod(device, "supportsStreamType", new object[] { s });
                 if (val is bool && (bool)val == true)
@@ -126,22 +128,32 @@ namespace DemoApp
                 }
             }
 
-            List<string> myWords = new List<string> { "hello", "computer", "action" };
-
+            message = ReceiveMessage(recvQueuePath);
+            SendMessage(sendQueuePath, ack);
             GestureManager gm = new GestureManager(device);
-            Gesture audioGesture = new AudioGesture(device);
-            foreach (string w in myWords)
+            switch (message)
             {
-                ((AudioGesture)audioGesture).AddWord(w);
-            }
+                case "AudioGesture":
+                    List<string> myWords = new List<string> { "hello", "computer", "action" };
+                    Gesture audioGesture = new AudioGesture(device);
+                    foreach (string w in myWords)
+                    {
+                        ((AudioGesture)audioGesture).AddWord(w);
+                    }
 
-            if (!gm.Add(audioGesture))
-            {
-                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
-                Environment.Exit(-1);
-            }
+                    if (!gm.Add(audioGesture))
+                    {
+                        Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
+                        Environment.Exit(-1);
+                    }
 
-            Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
+                    Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
+                    break;
+                default:
+                    Console.WriteLine("Unknown gesture type {0}", message);
+                    Environment.Exit(-1);
+                    break;
+            }
 
             Console.WriteLine("Now the GestureManager will start listening for input.");
             gm.Start();
@@ -161,7 +173,8 @@ namespace DemoApp
 
             foreach (Gesture ge in completedGestures)
             {
-                Console.WriteLine("Gesture {0} successfully detected!", ge);
+                SendMessage(sendQueuePath, "Gesture " + ge + " successfully detected!");
+                //Console.WriteLine("Gesture {0} successfully detected!", ge);
             }
 
             Console.WriteLine("The program will now exit.");
@@ -170,7 +183,6 @@ namespace DemoApp
         static void Main(string[] args)
         {
             RunMessagingApplication();
-            //RunStandaloneTestApplication();
         }
     }
 }
