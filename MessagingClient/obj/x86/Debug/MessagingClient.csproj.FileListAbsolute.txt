@@ -1,0 +1,7 @@
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\bin\Debug\MessagingClient.exe
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\bin\Debug\MessagingClient.pdb
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\bin\Debug\NuiDeviceFramework.dll
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\bin\Debug\NuiDeviceFramework.pdb
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\obj\x86\Debug\MessagingClient.exe
+C:\Users\Eric\Documents\Visual Studio 2010\Projects\NuiDeviceFramework\MessagingClient\obj\x86\Debug\MessagingClient.pdb

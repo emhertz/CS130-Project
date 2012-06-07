@@ -30,8 +30,6 @@ namespace NuiDeviceFramework.devices
         private const int BlueIndex = 0;
         private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
 
-
-
         public Kinect() : base()
         {
             foreach (var potentialSensor in KinectSensor.KinectSensors)
@@ -73,6 +71,9 @@ namespace NuiDeviceFramework.devices
                 this.audioStream = audioSource.Start();
                 this.supportsAudioData = true;
                 this.streams[(int)NuiStreamTypes.AudioData] = this.supportsAudioData;
+
+                this.supportsObjectData = false;
+                this.streams[(int)NuiStreamTypes.ObjectData] = this.supportsObjectData;
             }
         }
 

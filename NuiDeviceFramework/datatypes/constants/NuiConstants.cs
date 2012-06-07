@@ -7,6 +7,6 @@ namespace NuiDeviceFramework.datatypes.constants
 {
     public static class NuiConstants
     {
-        public static int NUM_STREAMS = 4;
+        public static int NUM_STREAMS = 5;
     }
 }

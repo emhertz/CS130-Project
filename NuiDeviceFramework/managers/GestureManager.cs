@@ -76,6 +76,7 @@ namespace NuiDeviceFramework.managers
                 {
                     result.Add(g);
                 }
+                g.GestureDetected = false;
             }
 
             return result;
