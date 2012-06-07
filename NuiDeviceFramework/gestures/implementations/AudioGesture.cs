@@ -105,6 +105,7 @@ Ensure you have the Microsoft Speech SDK installed.");
 
             string status = "Recognized: " + e.Result.Text + " " + e.Result.Confidence + "\nResponse: " + message;
             this.ReportSpeechStatus(status);
+            this.gestureDetected = true;
         }
 
         private void RejectSpeech(RecognitionResult result)

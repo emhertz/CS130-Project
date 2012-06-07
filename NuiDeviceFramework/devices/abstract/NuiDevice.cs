@@ -17,6 +17,7 @@ namespace NuiDeviceFramework.devices
         protected Boolean supportsDepthData = false;
         protected Boolean supportsSkeletonData = false;
         protected Boolean supportsAudioData = false;
+        protected Boolean supportsObjectData = false;
 
         protected Boolean[] streams = new Boolean[NuiConstants.NUM_STREAMS];
 
@@ -33,9 +34,22 @@ namespace NuiDeviceFramework.devices
         protected byte[] colorFrame32;
         protected WriteableBitmap colorOutputBitmap;
 
+        // object data
+        protected object[] objectData;
+
+
+
         public Boolean supportsStreamType(NuiStreamTypes s)
         {
             return streams[(int)s];
+        }
+
+        public Boolean SupportsObjectData
+        {
+            get
+            {
+                return this.supportsObjectData;
+            }
         }
 
         public Boolean SupportsColorData
@@ -67,6 +81,14 @@ namespace NuiDeviceFramework.devices
             get
             {
                 return this.supportsDepthData;
+            }
+        }
+
+        public object[] ObjectData
+        {
+            get
+            {
+                return this.objectData;
             }
         }
 
