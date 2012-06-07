@@ -79,7 +79,8 @@ namespace NuiDeviceFramework.gestures.implementations
                     float velocityX;
 
                     // Conditions maintained for all states
-                    if (distanceHipY < -RIGHTHAND_Y_THRESHOLD && distanceHipY < RIGHTHAND_Y_THRESHOLD)
+                    // TODO: is this meant to be? Changing
+                    if (distanceHipY > -RIGHTHAND_Y_THRESHOLD && distanceHipY < RIGHTHAND_Y_THRESHOLD)
                     {
                         skeletons[currentTrackingId].state = GestureState.Looking;
                     }
