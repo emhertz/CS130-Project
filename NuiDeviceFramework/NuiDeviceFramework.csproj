@@ -73,6 +73,7 @@
     <Compile Include="devices\abstract\NuiDevice.cs" />
     <Compile Include="gestures\abstract\Gesture.cs" />
     <Compile Include="gestures\implementations\AudioGesture.cs" />
+    <Compile Include="gestures\implementations\Bow.cs" />
     <Compile Include="gestures\implementations\SwipeLeft.cs" />
     <Compile Include="managers\GestureManager.cs" />
     <Compile Include="managers\DeviceManager.cs" />
