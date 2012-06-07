@@ -1,4 +1,28 @@
-﻿using System;
+﻿/**************************************************************
+ This file is part of Kinect Sensor Architecture Development Project.
+
+   Kinect Sensor Architecture Development Project is free software:
+   you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Kinect Sensor Architecture Development Project is distributed in
+   the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Kinect Sensor Architecture Development Project.  If
+   not, see <http://www.gnu.org/licenses/>.
+**************************************************************/
+/**************************************************************
+The work was done in joint collaboration with Cisco Systems Inc.
+Copyright ｩ 2012, Cisco Systems, Inc. and UCLA
+*************************************************************/
+
+using System;
 using System.Reflection;
 using System.Collections.Generic;
 using NuiDeviceFramework.datatypes;
@@ -29,13 +53,12 @@ namespace NuiDeviceFramework.gestures.implementations
         private float rightHandLastY = 0.0f;
         
         // Constants
-        private static float RIGHTHAND_INIT_DIST = 0.3f; // Right hand extended past right side of hip
-        private static float RIGHTHAND_END_DIST = -0.1f; // Right hand crosses over to left side of hip
-        private static float RIGHTHAND_MIN_VELOCITY = 0.05f; // Position units per frame
-        private static float RIGHTHAND_MAX_VELOCITY = 0.6f; // Position units per frame
-        private static float RIGHTHAND_Y_THRESHOLD = 0.2f;
+        private static float RIGHTHAND_INIT_DIST = 0.25f; // Right hand extended past right side of hip
+        private static float RIGHTHAND_END_DIST = -0.05f; // Right hand crosses over to left side of hip
+        private static float RIGHTHAND_MIN_VELOCITY = 0.005f;
+        private static float RIGHTHAND_Y_THRESHOLD = 0.3f;
 
-        private static int FRAME_UPDATE_WAIT = 3; // Check every few frames before analyzing
+        private static int FRAME_UPDATE_WAIT = 12; // Check every few frames before analyzing
 
         public override void Start()
         {
@@ -86,29 +109,32 @@ namespace NuiDeviceFramework.gestures.implementations
 
                     skeleton = skeletonArray[skeletonIndex];
 
-                    // Type cast error occurs here
-                    object[] joints = ReflectionUtilities.InvokeProperty(skeleton, "Joints") as object[];
+                   
+                    object joints = ReflectionUtilities.InvokeProperty(skeleton, "Joints") as object;
                     if (joints == null)
                     {
-                        // This always executes
                         continue;
                     }
 
-                    object hipPosition = ReflectionUtilities.InvokeProperty(joints[(int)NuiJointType.HipCenter], "Position");
-                    object rightHandPosition = ReflectionUtilities.InvokeProperty(joints[(int)NuiJointType.WristRight], "Position");
+                    // Joint calculations
+                    object hipJoint = ReflectionUtilities.InvokeMethod(joints, "GetJoint", new object[] { NuiJointType.HipCenter });
+                    object hipPosition = ReflectionUtilities.InvokeProperty(hipJoint, "Position");
+                    object rightHandJoint = ReflectionUtilities.InvokeMethod(joints, "GetJoint", new object[] { NuiJointType.WristRight });
+                    object rightHandPosition = ReflectionUtilities.InvokeProperty(rightHandJoint, "Position");
                     float hipCenterX = (float)ReflectionUtilities.InvokeProperty(hipPosition, "X");
                     float hipCenterY = (float)ReflectionUtilities.InvokeProperty(hipPosition, "Y");
                     float rightHandPosX = (float)ReflectionUtilities.InvokeProperty(rightHandPosition, "X");
                     float rightHandPosY = (float)ReflectionUtilities.InvokeProperty(rightHandPosition, "Y");
                     float distanceHipX = rightHandPosX - hipCenterX;
                     float distanceHipY = rightHandPosY - hipCenterY;
-                    float velocityX;
+                    float velocityX = rightHandLastX - rightHandPosX;
 
-                    Console.WriteLine("Distance X: " + distanceHipX + " , Distance Y: " + distanceHipY);
+                    Console.WriteLine("State: " + (int)state + " DX: " + distanceHipX + " DY: " + distanceHipY + " Vel: " + velocityX);
 
                     // Conditions maintained for all states
-                    if (distanceHipY < -RIGHTHAND_Y_THRESHOLD && distanceHipY < RIGHTHAND_Y_THRESHOLD)
+                    if (distanceHipY < -RIGHTHAND_Y_THRESHOLD || distanceHipY > RIGHTHAND_Y_THRESHOLD)
                     {
+                        Console.WriteLine("FAILURE: Out Of Y");
                         state = GestureState.Looking;
                     }
 
@@ -125,7 +151,7 @@ namespace NuiDeviceFramework.gestures.implementations
                             }
                         case GestureState.Initial:
                             {
-                                if ((rightHandPosX - rightHandLastX) > 0)
+                                if (velocityX > RIGHTHAND_MIN_VELOCITY)
                                 {
                                     state = GestureState.MoveLeft;
                                 }
@@ -133,14 +159,14 @@ namespace NuiDeviceFramework.gestures.implementations
                             }
                         case GestureState.MoveLeft:
                             {
+                                if (velocityX < -RIGHTHAND_MIN_VELOCITY)
+                                {
+                                    state = GestureState.Looking;
+                                    Console.WriteLine("FAILURE: Reverse Direction");
+                                }
                                 if (distanceHipX <= RIGHTHAND_END_DIST)
                                 {
                                     state = GestureState.Final;
-                                }
-                                velocityX = rightHandLastX - rightHandPosX;
-                                if (velocityX < RIGHTHAND_MIN_VELOCITY || velocityX > RIGHTHAND_MAX_VELOCITY)
-                                {
-                                    state = GestureState.Looking;
                                 }
                                 break;
                             }
@@ -169,8 +195,7 @@ namespace NuiDeviceFramework.gestures.implementations
             else
             {
                 Console.WriteLine(
-                    @"Error in adding gesture:
-skeleton data not supported by device.");
+                    @"Error in adding gesture: skeleton data not supported by device.");
             }
         }
 
