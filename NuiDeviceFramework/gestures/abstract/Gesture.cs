@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NuiDeviceFramework.datatypes.skeleton.enums;
 using NuiDeviceFramework.devices;
+using NuiDeviceFramework.reflection;
 
 namespace NuiDeviceFramework.Gestures
 {
@@ -42,5 +43,6 @@ namespace NuiDeviceFramework.Gestures
         }
 
         public abstract void Start();
+
     }
 }

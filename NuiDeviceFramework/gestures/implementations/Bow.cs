@@ -111,8 +111,8 @@ namespace NuiDeviceFramework.gestures.implementations
 
 
 
-                    float[] headPosition = Gesture.getPositionOfJoint(joints, (int)NuiJointType.Head);
-                    float[] shoulderPosition = Gesture.getPositionOfJoint(joints, (int)NuiJointType.ShoulderCenter);
+                    float[] headPosition = this.getPositionOfJoint(joints, (int)NuiJointType.Head);
+                    float[] shoulderPosition = this.getPositionOfJoint(joints, (int)NuiJointType.ShoulderCenter);
 
 
                     // Conditions per state
@@ -197,6 +197,22 @@ namespace NuiDeviceFramework.gestures.implementations
                 this.headLast = headPosition;
                 this.shoulderLast = shoulderPosition;
             }
+
+        }
+
+        private float[] getPositionOfJoint(object[] joints, int nuiJointTypeId)
+        {
+            float[] ret = new float[3];
+            object posProp = ReflectionUtilities.InvokeProperty(joints[nuiJointTypeId], "Position");
+            float x = (float)ReflectionUtilities.InvokeProperty(posProp, "X");
+            float y = (float)ReflectionUtilities.InvokeProperty(posProp, "Y");
+            float z = (float)ReflectionUtilities.InvokeProperty(posProp, "Z");
+
+            ret[0] = x;
+            ret[1] = y;
+            ret[2] = z;
+
+            return ret;
 
         }
     }
