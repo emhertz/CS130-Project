@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuiDeviceFramework", "NuiDe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoApp", "DemoApp\DemoApp.csproj", "{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagingClient", "MessagingClient\MessagingClient.csproj", "{A67D7804-6DBB-41DB-A797-F749E56CA7C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -19,6 +21,10 @@ Global
 		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Debug|x86.Build.0 = Debug|x86
 		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Release|x86.ActiveCfg = Release|x86
 		{CB26C32C-F3A1-4DCE-8DED-37E8B83FC64F}.Release|x86.Build.0 = Release|x86
+		{A67D7804-6DBB-41DB-A797-F749E56CA7C4}.Debug|x86.ActiveCfg = Debug|x86
+		{A67D7804-6DBB-41DB-A797-F749E56CA7C4}.Debug|x86.Build.0 = Debug|x86
+		{A67D7804-6DBB-41DB-A797-F749E56CA7C4}.Release|x86.ActiveCfg = Release|x86
+		{A67D7804-6DBB-41DB-A797-F749E56CA7C4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

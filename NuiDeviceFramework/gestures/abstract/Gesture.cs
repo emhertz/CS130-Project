@@ -19,6 +19,10 @@ namespace NuiDeviceFramework.Gestures
             {
                 return this.gestureDetected;
             }
+            set
+            {
+                this.gestureDetected = value;
+            }
         }
 
         public List<NuiStreamTypes> getNecessaryStreams()

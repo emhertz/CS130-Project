@@ -7,6 +7,6 @@ namespace NuiDeviceFramework.datatypes.skeleton.enums
 {
     public enum NuiStreamTypes
     {
-        ColorData, DepthData, SkeletonData, AudioData
+        ColorData, DepthData, SkeletonData, AudioData, ObjectData
     }
 }
