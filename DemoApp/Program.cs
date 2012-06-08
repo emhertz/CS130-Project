@@ -149,31 +149,27 @@ namespace DemoApp
                 }
             }
 
-            List<string> myWords = new List<string> { "hello", "computer", "action" };
-
             GestureManager gm = new GestureManager(device);
 			
-			// /*
-            Gesture audioGesture = new AudioGesture(device);
-            foreach (string w in myWords)
-            {
-                ((AudioGesture)audioGesture).AddWord(w);
-            }
+			/*
+            Gesture audioGesture = new MyAudioGesture(device);
 
             if (!gm.Add(audioGesture))
             {
                 Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
                 Environment.Exit(-1);
             }
-			// */
+            
+			*/
 
-            /*
-			Gesture skeletonGesture = new SwipeLeft(device);
+            
+			//Gesture skeletonGesture = new SwipeLeft(device);
+            Gesture skeletonGesture = new Bow(device);
             if (!gm.Add(skeletonGesture))
             {
                 Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGesture, device);
             }
-			*/
+		    
 			
             Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
 
@@ -199,12 +195,14 @@ namespace DemoApp
             }
 
             Console.WriteLine("The program will now exit.");
+            
         }
 
         static void Main(string[] args)
         {
             //RunMessagingApplication();
             RunStandaloneTestApplication();
+            Console.ReadLine();
         }
     }
 }
