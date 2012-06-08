@@ -1,4 +1,28 @@
-﻿using System;
+﻿/**************************************************************
+ This file is part of Kinect Sensor Architecture Development Project.
+
+   Kinect Sensor Architecture Development Project is free software:
+   you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Kinect Sensor Architecture Development Project is distributed in
+   the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Kinect Sensor Architecture Development Project.  If
+   not, see <http://www.gnu.org/licenses/>.
+**************************************************************/
+/**************************************************************
+The work was done in joint collaboration with Cisco Systems Inc.
+Copyright ｩ 2012, Cisco Systems, Inc. and UCLA
+*************************************************************/
+
+using System;
 using System.Reflection;
 using System.Collections.Generic;
 using NuiDeviceFramework.datatypes;
@@ -15,27 +39,58 @@ namespace NuiDeviceFramework.gestures.implementations
          - Conditions: WristRight in line with HipCenter in Y Direction
        Stream(s) needed: SkeletonData */
 
-    public class SwipeLeft : Gesture
+    public class SwipeLeft : SkeletalGesture
     {
         private bool breakLoop = false;
-        private object skeleton;
         private TimeSpan frameTrack = new TimeSpan();
         private int frameNumber = 0;
-        private int skeletonIndex = 0;
-        private bool skeletonFound;
 
-        private GestureState state = GestureState.Looking;
-        private float rightHandLastX = 0.0f;
-        private float rightHandLastY = 0.0f;
-        
         // Constants
-        private static float RIGHTHAND_INIT_DIST = 0.3f; // Right hand extended past right side of hip
-        private static float RIGHTHAND_END_DIST = -0.1f; // Right hand crosses over to left side of hip
-        private static float RIGHTHAND_MIN_VELOCITY = 0.05f; // Position units per frame
-        private static float RIGHTHAND_MAX_VELOCITY = 0.6f; // Position units per frame
-        private static float RIGHTHAND_Y_THRESHOLD = 0.2f;
+        private static float RIGHTHAND_INIT_DIST = 0.25f; // Right hand extended past right side of hip
+        private static float RIGHTHAND_END_DIST = -0.05f; // Right hand crosses over to left side of hip
+        private static float RIGHTHAND_MIN_VELOCITY = 0.005f;
+        private static float RIGHTHAND_Y_THRESHOLD = 0.3f;
 
-        private static int FRAME_UPDATE_WAIT = 3; // Check every few frames before analyzing
+        private static int FRAME_UPDATE_WAIT = 12; // Check every few frames before analyzing
+
+
+
+        private float[] hipPosition;
+
+        private float[] rightHandPosition;
+        private float[] rightHandLast = new float[3];
+
+        private bool requiredCondition()
+        {
+            float distanceHipX = rightHandPosition[X] - hipPosition[X];
+            float distanceHipY = rightHandPosition[Y] - hipPosition[Y];
+            return (distanceHipY < -RIGHTHAND_Y_THRESHOLD || distanceHipY > RIGHTHAND_Y_THRESHOLD);
+        }
+
+        private bool isInitial()
+        {
+            float distanceHipX = rightHandPosition[X] - hipPosition[X];
+            return (
+                distanceHipX >= RIGHTHAND_INIT_DIST
+            );
+        }
+
+        private bool isMoveLeft()
+        {
+            float velocityX = rightHandLast[X] - rightHandPosition[X];
+            
+            return (
+                velocityX > RIGHTHAND_MIN_VELOCITY
+            );
+
+        }
+        private bool isFinal()
+        {
+            float distanceHipX = rightHandPosition[X] - hipPosition[X];
+            return (
+                distanceHipX <= RIGHTHAND_END_DIST
+            );
+        }
 
         public override void Start()
         {
@@ -59,102 +114,22 @@ namespace NuiDeviceFramework.gestures.implementations
                 {
                     continue;
                 }
-
-                object[] skeletonArray = ReflectionUtilities.InvokeProperty(device, "SkeletonArray") as object[];
-                if (skeletonArray == null)
+                if (this.getSkeleton() && this.getJoints())
                 {
-                    continue;
-                }
-                int skeletonArrayLength = (int)ReflectionUtilities.InvokeProperty(skeletonArray, "Length");
-                if (skeletonArrayLength > 0)
-                {
-                    skeletonFound = false;
-                    for (int i = 0; i < skeletonArrayLength; i++)
+                    this.loadTrackedPositions();
+                    rightHandPosition = this.getTrackedPosition((int)NuiJointType.HandRight);
+                    hipPosition = this.getTrackedPosition((int)NuiJointType.HipCenter);
+
+                    Console.WriteLine((GestureState)this.state());
+
+                    if (!this.processNextState())
                     {
-                        object currTrackingState = ReflectionUtilities.InvokeProperty(skeletonArray[i], "TrackingState");
-                        if ((int)currTrackingState == (int)NuiSkeletonTrackingState.Tracked)
-                        {
-                            skeletonIndex = i;
-                            skeletonFound = true;
-                            break;
-                        }
-                    }
-                    if (skeletonFound == false)
-                    {
-                        continue;
+                        this.gestureDetected = true;
+                        breakLoop = true;
+                        break;
                     }
 
-                    skeleton = skeletonArray[skeletonIndex];
-
-                    // Type cast error occurs here
-                    object[] joints = ReflectionUtilities.InvokeProperty(skeleton, "Joints") as object[];
-                    if (joints == null)
-                    {
-                        // This always executes
-                        continue;
-                    }
-
-                    object hipPosition = ReflectionUtilities.InvokeProperty(joints[(int)NuiJointType.HipCenter], "Position");
-                    object rightHandPosition = ReflectionUtilities.InvokeProperty(joints[(int)NuiJointType.WristRight], "Position");
-                    float hipCenterX = (float)ReflectionUtilities.InvokeProperty(hipPosition, "X");
-                    float hipCenterY = (float)ReflectionUtilities.InvokeProperty(hipPosition, "Y");
-                    float rightHandPosX = (float)ReflectionUtilities.InvokeProperty(rightHandPosition, "X");
-                    float rightHandPosY = (float)ReflectionUtilities.InvokeProperty(rightHandPosition, "Y");
-                    float distanceHipX = rightHandPosX - hipCenterX;
-                    float distanceHipY = rightHandPosY - hipCenterY;
-                    float velocityX;
-
-                    Console.WriteLine("Distance X: " + distanceHipX + " , Distance Y: " + distanceHipY);
-
-                    // Conditions maintained for all states
-                    if (distanceHipY < -RIGHTHAND_Y_THRESHOLD && distanceHipY < RIGHTHAND_Y_THRESHOLD)
-                    {
-                        state = GestureState.Looking;
-                    }
-
-                    // Conditions per state
-                    switch (state)
-                    {
-                        case GestureState.Looking:
-                            {
-                                if (distanceHipX >= RIGHTHAND_INIT_DIST)
-                                {
-                                    state = GestureState.Initial;
-                                }
-                                break;
-                            }
-                        case GestureState.Initial:
-                            {
-                                if ((rightHandPosX - rightHandLastX) > 0)
-                                {
-                                    state = GestureState.MoveLeft;
-                                }
-                                break;
-                            }
-                        case GestureState.MoveLeft:
-                            {
-                                if (distanceHipX <= RIGHTHAND_END_DIST)
-                                {
-                                    state = GestureState.Final;
-                                }
-                                velocityX = rightHandLastX - rightHandPosX;
-                                if (velocityX < RIGHTHAND_MIN_VELOCITY || velocityX > RIGHTHAND_MAX_VELOCITY)
-                                {
-                                    state = GestureState.Looking;
-                                }
-                                break;
-                            }
-                        case GestureState.Final:
-                            {
-                                this.gestureDetected = true;
-                                // Exit loop for now
-                                breakLoop = true;
-                                break;
-                            }
-                    } // switch
-
-                    rightHandLastX = rightHandPosX;
-                    rightHandLastY = rightHandPosY;
+                    SkeletalGesture.copyPositions(rightHandLast, rightHandPosition);
                 } // for
             } // while
         }
@@ -162,16 +137,15 @@ namespace NuiDeviceFramework.gestures.implementations
         public SwipeLeft(object d) : base(d)
         {
             device = d;
-            if ((bool)ReflectionUtilities.InvokeProperty(device, "SupportsSkeletonData"))
-            {
-                streams.Add(NuiStreamTypes.SkeletonData);
-            }
-            else
-            {
-                Console.WriteLine(
-                    @"Error in adding gesture:
-skeleton data not supported by device.");
-            }
+
+            this.addTrackedPosition((int)NuiJointType.HandRight);
+            this.addTrackedPosition((int)NuiJointType.HipCenter);
+
+            this.setInitialState((int)GestureState.Looking);
+            this.setRequiredCheck(new TransitionDelegate(requiredCondition), (int)GestureState.Looking);
+            this.addState((int)GestureState.Initial, new TransitionDelegate(isInitial), true);
+            this.addState((int)GestureState.MoveLeft, new TransitionDelegate(isMoveLeft), true);
+            this.addState((int)GestureState.Final, new TransitionDelegate(isFinal), true);
         }
 
         private enum GestureState

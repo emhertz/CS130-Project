@@ -1,4 +1,28 @@
-﻿using System;
+﻿/**************************************************************
+ This file is part of Kinect Sensor Architecture Development Project.
+
+   Kinect Sensor Architecture Development Project is free software:
+   you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   Kinect Sensor Architecture Development Project is distributed in
+   the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Kinect Sensor Architecture Development Project.  If
+   not, see <http://www.gnu.org/licenses/>.
+**************************************************************/
+/**************************************************************
+The work was done in joint collaboration with Cisco Systems Inc.
+Copyright ｩ 2012, Cisco Systems, Inc. and UCLA
+*************************************************************/
+
+using System;
 using NuiDeviceFramework.datatypes.skeleton.enums;
 using NuiDeviceFramework.gestures.implementations;
 using NuiDeviceFramework.Gestures;
@@ -47,7 +71,6 @@ namespace DemoApp
                 Console.WriteLine(e.Message);
 
             }
-
             return;
         }
 
@@ -82,7 +105,7 @@ namespace DemoApp
             {
                 Console.WriteLine(e.Message);
             }
-
+            
             return;
         }
 
@@ -107,7 +130,7 @@ namespace DemoApp
             Console.WriteLine("Welcome to the Cisco Kinect Team 1 Demo Application.");
             Console.WriteLine("First, we will set up a connection to the Kinect.");
             String deviceName = "NuiDeviceFramework.devices.Kinect";
-            String dllPath = "C:\\Users\\Eric\\Documents\\Visual Studio 2010\\Projects\\NuiDeviceFramework\\NuiDeviceFramework\\bin\\Debug\\NuiDeviceFramework.dll";
+            String dllPath = "NuiDeviceFramework.dll";
             object device = DeviceManager.GetConnection(deviceName, dllPath);
 
             if (device == null)
@@ -126,21 +149,34 @@ namespace DemoApp
                 }
             }
 
-            List<string> myWords = new List<string> { "hello", "computer", "action" };
-
             GestureManager gm = new GestureManager(device);
-            Gesture audioGesture = new AudioGesture(device);
-            foreach (string w in myWords)
-            {
-                ((AudioGesture)audioGesture).AddWord(w);
-            }
+			
+			/*
+            Gesture audioGesture = new MyAudioGesture(device);
 
             if (!gm.Add(audioGesture))
             {
                 Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
                 Environment.Exit(-1);
             }
+            
+			*/
 
+            
+			Gesture skeletonGestureSL = new SwipeLeft(device);
+
+            if (!gm.Add(skeletonGestureSL))
+            {
+                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGestureSL, device);
+            }
+
+
+            Gesture skeletonGestureB = new Bow(device);
+            if (!gm.Add(skeletonGestureB))
+            {
+                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGestureB, device);
+            }
+			
             Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
 
             Console.WriteLine("Now the GestureManager will start listening for input.");
@@ -165,12 +201,13 @@ namespace DemoApp
             }
 
             Console.WriteLine("The program will now exit.");
+            
         }
 
         static void Main(string[] args)
         {
-            RunMessagingApplication();
-            //RunStandaloneTestApplication();
+            //RunMessagingApplication();
+            RunStandaloneTestApplication();
         }
     }
 }
