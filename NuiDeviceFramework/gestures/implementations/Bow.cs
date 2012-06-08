@@ -43,7 +43,9 @@ namespace NuiDeviceFramework.gestures.implementations
         private bool breakLoop = false;
 
         private TimeSpan frameTrack = new TimeSpan();
-        //private int frameNumber = 0;
+        private int frameNumber = 0;
+
+        private const int FRAME_UPDATE_WAIT = 6; // Check every few frames before analyzing
 
 
         // Constants
@@ -52,13 +54,8 @@ namespace NuiDeviceFramework.gestures.implementations
         private const float HEAD_INIT_Y_LO = 0.1f; // Right hand extended past right side of hip
         private const float HEAD_INIT_Y_HI = 0.8f; // Right hand extended past right side of hip
 
-        private const float HEAD_SHOULDER_DIFFERENCE_THRESHOLD = 0.175f;
+        private const float HEAD_RATIO_THRESHOLD = 0.5f;
 
-        private const int X = 0;
-        private const int Y = 1;
-        private const int Z = 2;
-
-        private GestureState state;
         private float[] headLast = new float[3];
 
         private float[] headInitial;
@@ -68,9 +65,6 @@ namespace NuiDeviceFramework.gestures.implementations
         {
             None, Ready, Bowing, Final
         }
-
-
-
 
         private bool isReady()
         {
@@ -98,7 +92,7 @@ namespace NuiDeviceFramework.gestures.implementations
         {
 
             return (
-                headPosition[Y] < (headInitial[Y] * 0.50)
+                headPosition[Y] < (headInitial[Y] * HEAD_RATIO_THRESHOLD)
                 );
 
         }
@@ -110,12 +104,22 @@ namespace NuiDeviceFramework.gestures.implementations
                 TimeSpan tspan = (TimeSpan)ReflectionUtilities.InvokeProperty(device, "SkeletonLastModified");
                 if (frameTrack != tspan)
                 {
-                    frameTrack = tspan;
+                    frameNumber++;
+                    if (frameNumber >= FRAME_UPDATE_WAIT)
+                    {
+                        frameNumber = 0;
+                        frameTrack = tspan;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
                     continue;
                 }
+
                 if (this.getSkeleton() && this.getJoints())
                 {
                     this.loadTrackedPositions();

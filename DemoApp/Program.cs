@@ -163,13 +163,19 @@ namespace DemoApp
 			*/
 
             
-			//Gesture skeletonGesture = new SwipeLeft(device);
-            Gesture skeletonGesture = new Bow(device);
-            if (!gm.Add(skeletonGesture))
+			Gesture skeletonGestureSL = new SwipeLeft(device);
+
+            if (!gm.Add(skeletonGestureSL))
             {
-                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGesture, device);
+                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGestureSL, device);
             }
-		    
+
+
+            Gesture skeletonGestureB = new Bow(device);
+            if (!gm.Add(skeletonGestureB))
+            {
+                Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGestureB, device);
+            }
 			
             Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
 
@@ -202,7 +208,6 @@ namespace DemoApp
         {
             //RunMessagingApplication();
             RunStandaloneTestApplication();
-            Console.ReadLine();
         }
     }
 }
