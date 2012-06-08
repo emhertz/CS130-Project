@@ -57,6 +57,11 @@ namespace NuiDeviceFramework.datatypes
             } 
         }
 
+        public NuiJoint GetJoint(NuiJointType jointType)
+        {
+            return this.joints[(int)jointType];
+        }
+
         public int Count
         {
             get { return this.joints.Count; }
@@ -79,7 +84,7 @@ namespace NuiDeviceFramework.datatypes
 
             public bool MoveNext()
             {
-                if (position < NuiJointType.WristRight)
+                if (position < NuiJointType.FootRight)
                 {
                     position++;
                     return true;
@@ -92,7 +97,7 @@ namespace NuiDeviceFramework.datatypes
 
             public void Reset()
             {
-                position = NuiJointType.AnkleLeft;
+                position = NuiJointType.HipCenter;
             }
 
             public object Current
