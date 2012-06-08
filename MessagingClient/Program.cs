@@ -135,10 +135,10 @@ namespace MessagingClient
             {
                 case "AudioGesture":
                     List<string> myWords = new List<string> { "hello", "computer", "action" };
-                    Gesture audioGesture = new AudioGesture(device);
+                    Gesture audioGesture = new MyAudioGesture(device);
                     foreach (string w in myWords)
                     {
-                        ((AudioGesture)audioGesture).AddWord(w);
+                        ((MyAudioGesture)audioGesture).AddWord(w);
                     }
 
                     if (!gm.Add(audioGesture))

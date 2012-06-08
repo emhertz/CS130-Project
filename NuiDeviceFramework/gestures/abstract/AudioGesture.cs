@@ -33,7 +33,7 @@ using System.Collections.Generic;
 
 namespace NuiDeviceFramework.gestures.implementations
 {
-    public class AudioGesture : Gesture
+    public abstract class AudioGesture : Gesture
     {
         private SpeechRecognitionEngine sre;
         private const int WaveImageWidth = 500;
@@ -92,6 +92,8 @@ Ensure you have the Microsoft Speech SDK installed.");
             return sre;
         }
 
+        
+
         private void SreSpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs e)
         {
             this.RejectSpeech(e.Result);
@@ -99,49 +101,17 @@ Ensure you have the Microsoft Speech SDK installed.");
 
         private void SreSpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
         {
-            this.ReportSpeechStatus("Hypothesized: " + e.Result.Text + " " + e.Result.Confidence);
+            this.HypothesizedSpeech(e.Result);
         }
-
+        
         private void SreSpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            if (e.Result.Confidence < 0.7)
-            {
-                this.RejectSpeech(e.Result);
-                return;
-            }
-
-            string message = "";
-            switch (e.Result.Text.ToUpperInvariant())
-            {
-                case "HELLO":
-                    message += "Hello! I am your computer.";
-                    break;
-                case "COMPUTER":
-                    message += "Computer here. What would you like me to do?";
-                    break;
-                case "ACTION":
-                    message += "What action shall I perform?";
-                    break;
-                default:
-                    message += "I recognized your speech but I'm not sure what you mean.";
-                    break;
-            }
-
-            string status = "Recognized: " + e.Result.Text + " " + e.Result.Confidence + "\nResponse: " + message;
-            this.ReportSpeechStatus(status);
-            this.gestureDetected = true;
+            this.RecognizedSpeech(e.Result);
         }
 
-        private void RejectSpeech(RecognitionResult result)
-        {
-            string status = "Rejected: " + (result == null ? string.Empty : result.Text + " " + result.Confidence);
-            this.ReportSpeechStatus(status);
-        }
-
-        private void ReportSpeechStatus(string status)
-        {
-            Console.WriteLine(status);
-        }
+        protected abstract void HypothesizedSpeech(RecognitionResult result);
+        protected abstract void RejectSpeech(RecognitionResult result);
+        protected abstract void RecognizedSpeech(RecognitionResult result);
 
         private static RecognizerInfo GetRecognizer()
         {

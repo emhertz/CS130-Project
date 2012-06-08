@@ -86,6 +86,7 @@ namespace NuiDeviceFramework.gestures.implementations
                 object[] skeletonArray = ReflectionUtilities.InvokeProperty(device, "SkeletonArray") as object[];
                 if (skeletonArray == null)
                 {
+                    
                     continue;
                 }
                 int skeletonArrayLength = (int)ReflectionUtilities.InvokeProperty(skeletonArray, "Length");
