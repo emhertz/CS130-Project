@@ -43,74 +43,11 @@ namespace NuiDeviceFramework.Gestures
 
         protected object joints;
 
-        const int X = 0;
-        const int Y = 1;
-        const int Z = 2;
+        protected const int X = 0;
+        protected const int Y = 1;
+        protected const int Z = 2;
 
         private Dictionary<int, float[]> trackedPositions = new Dictionary<int, float[]>();
-
-        public delegate bool TransitionDelegate();
-
-        protected class Transition
-        {
-            public TransitionDelegate del;
-            public bool reversible;
-            public int prevState;
-            public int nextState;
-        }
-        private List<Transition> transitions = new List<Transition>();
-        private List<int> states = new List<int>();
-        private int curState = 0;
-
-        protected void setInitialState(int state) {
-            states.Clear();
-            states.Add(state);
-            curState = state;
-        }
-        protected int state()
-        {
-            return this.curState;
-        }
-        protected bool processNextState()
-        {
-
-            int stateIdx = states.FindIndex(s => s == curState);
-            if (stateIdx >= states.Count() - 1)
-            {
-                return true;
-            }
-            else if (stateIdx < 0)
-            {
-                return false;
-            }
-            
-            Transition t = this.transitions[stateIdx];
-            TransitionDelegate td = t.del;
-            if (td())
-            {
-                curState = t.nextState;
-            }
-            else if (t.reversible && stateIdx > 0 && !this.transitions[stateIdx - 1].del())
-            {
-                curState = this.transitions[stateIdx-1].prevState;
-            }
-
-            return curState != states.Last();
-        }
-        protected void resetState()
-        {
-            curState = states.First();
-        }
-        protected void addState(int nextState, TransitionDelegate transitionFunction, bool reversible)
-        {
-            Transition t = new Transition();
-            t.del = transitionFunction;
-            t.reversible = reversible;
-            t.nextState = nextState;
-            t.prevState = states.Last();
-            transitions.Add(t);
-            states.Add(nextState);
-        }
 
 
         public SkeletalGesture(object d)
@@ -233,6 +170,90 @@ namespace NuiDeviceFramework.Gestures
             dst[Y] = src[Y];
             dst[Z] = src[Z];
         }
+
+
+
+
+
+        public delegate bool TransitionDelegate();
+
+        protected class Transition
+        {
+            public TransitionDelegate del;
+            public bool reversible;
+            public int prevState;
+            public int nextState;
+        }
+        private List<Transition> transitions = new List<Transition>();
+        private List<int> states = new List<int>();
+        private int curState = 0;
+
+        private TransitionDelegate requiredCheck = null;
+        private int requiredCheckFailState = 0;
+
+        protected void setInitialState(int state)
+        {
+            states.Clear();
+            states.Add(state);
+            curState = state;
+        }
+        protected int state()
+        {
+            return this.curState;
+        }
+
+        protected void setRequiredCheck(TransitionDelegate td, int s)
+        {
+            requiredCheck = td;
+            requiredCheckFailState = s;
+        }
+
+        protected bool processNextState()
+        {
+
+            int stateIdx = states.FindIndex(s => s == curState);
+            if (stateIdx >= states.Count() - 1)
+            {
+                return true;
+            }
+            else if (stateIdx < 0)
+            {
+                return false;
+            }
+
+            Transition t = this.transitions[stateIdx];
+            TransitionDelegate td = t.del;
+            if (requiredCheck != null && requiredCheck()) {
+                curState = requiredCheckFailState;
+            } 
+            else if (td())
+            {
+                curState = t.nextState;
+            }
+            else if (t.reversible && stateIdx > 0 && !this.transitions[stateIdx - 1].del())
+            {
+                curState = this.transitions[stateIdx - 1].prevState;
+            }
+
+            return curState != states.Last();
+        }
+        protected void resetState()
+        {
+            curState = states.First();
+        }
+        protected void addState(int nextState, TransitionDelegate transitionFunction, bool reversible)
+        {
+            Transition t = new Transition();
+            t.del = transitionFunction;
+            t.reversible = reversible;
+            t.nextState = nextState;
+            t.prevState = states.Last();
+            transitions.Add(t);
+            states.Add(nextState);
+        }
+
+
+
 
     }
 }
