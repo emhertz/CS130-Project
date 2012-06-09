@@ -77,6 +77,7 @@
     <Compile Include="gestures\abstract\SkeletalGesture.cs" />
     <Compile Include="gestures\abstract\Gesture.cs" />
     <Compile Include="gestures\abstract\AudioGesture.cs" />
+    <Compile Include="gestures\implementations\LowerHands.cs" />
     <Compile Include="gestures\implementations\MyAudioGesture.cs" />
     <Compile Include="gestures\implementations\Bow.cs" />
     <Compile Include="gestures\implementations\SwipeLeft.cs" />

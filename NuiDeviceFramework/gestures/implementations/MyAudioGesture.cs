@@ -36,6 +36,8 @@ namespace NuiDeviceFramework.gestures.implementations
     public class MyAudioGesture : AudioGesture
     {
 
+        const float CONFIDENCE_THRESHOLD = 0.7f;
+
         public MyAudioGesture(object d) : base(d)
         {
             List<string> myWords = new List<string> { "hello", "computer", "action" };
@@ -44,6 +46,7 @@ namespace NuiDeviceFramework.gestures.implementations
                 this.AddWord(w);
             }
         }
+
         protected override void HypothesizedSpeech(RecognitionResult result)
         {
             this.ReportSpeechStatus("Hypothesized: " + result.Text + " " + result.Confidence);
@@ -55,7 +58,7 @@ namespace NuiDeviceFramework.gestures.implementations
         }
         protected override void RecognizedSpeech(RecognitionResult result)
         {
-            if (result.Confidence < 0.7)
+            if (result.Confidence < CONFIDENCE_THRESHOLD)
             {
                 this.RejectSpeech(result);
                 return;

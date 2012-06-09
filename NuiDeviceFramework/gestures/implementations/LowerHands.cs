@@ -49,44 +49,38 @@ namespace NuiDeviceFramework.gestures.implementations
 
 
         // Constants
-        //private const float HEAD_INIT_X_LO = -1.0f; // Right hand extended past right side of hip
-        //private const float HEAD_INIT_X_HI = 1.0f; // Right hand extended past right side of hip
-        //private const float HEAD_INIT_Y_LO = 0.1f; // Right hand extended past right side of hip
-        //private const float HEAD_INIT_Y_HI = 0.8f; // Right hand extended past right side of hip
-
-        private const float LEFT_WRIST_INIT_Y_LO = 0.1f; // Left and right hands start at about head-level
+        
+        // Left and right hands start at about head-level
+        private const float LEFT_WRIST_INIT_Y_LO = 0.1f; 
         private const float RIGHT_WRIST_INIT_Y_LO = 0.1f;
         private const float LEFT_WRIST_INIT_Y_HI = 0.8f;
         private const float RIGHT_WRIST_INIT_Y_HI = 0.8f;
+        
         private const float RIGHTHAND_MIN_VELOCITY = 0.005f;
+        
         private const float HANDS_MIN_DISTANCE = 0.5f;
         private const float HANDS_MAX_DISTANCE = 1.0f;
 
-        //private const float HEAD_RATIO_THRESHOLD = 0.5f;
-        private const float HANDS_RATIO_THRESHOLD = 0.5f; // Hands lower down psat the chest
+        // Hands lower down past the chest
+        private const float HANDS_RATIO_THRESHOLD = 0.5f; 
 
-        //private float[] headLast = new float[3];
         private float[] leftWristLast = new float[3];
         private float[] rightWristLast = new float[3];
 
-        //private float[] headInitial;
-        //private float[] headPosition;
         private float[] leftWristInitial;
         private float[] rightWristInitial;
+        
         private float[] leftWristPosition;
         private float[] rightWristPosition;
 
         private enum GestureState
         {
-            //None, Ready, Bowing, Final
             None, Ready, Lowering, Final
         }
 
         private bool isReady()
         {
             return (
-                //headPosition[X] < HEAD_INIT_X_HI && headPosition[X] > HEAD_INIT_X_LO &&
-                //headPosition[Y] < HEAD_INIT_Y_HI && headPosition[Y] > HEAD_INIT_Y_LO
                 leftWristPosition[Y] < LEFT_WRIST_INIT_Y_HI && leftWristPosition[Y] > LEFT_WRIST_INIT_Y_LO &&
                 rightWristPosition[Y] < RIGHT_WRIST_INIT_Y_HI && rightWristPosition[Y] > RIGHT_WRIST_INIT_Y_LO &&
                 Math.Abs(leftWristPosition[X] - rightWristPosition[X]) > HANDS_MIN_DISTANCE &&
@@ -99,9 +93,7 @@ namespace NuiDeviceFramework.gestures.implementations
 
             float[] velocityLeft = new float[3];
             float[] velocityRight = new float[3];
-            //velocity[X] = headPosition[X] - headLast[X];
-            //velocity[Y] = headPosition[Y] - headLast[Y];
-            //velocity[Z] = headPosition[Z] - headLast[Z];
+
             velocityLeft[X] = leftWristPosition[X] - leftWristLast[X];
             velocityLeft[Y] = leftWristPosition[Y] - leftWristLast[Y];
             velocityLeft[Z] = leftWristPosition[Z] - leftWristLast[Z];
@@ -110,7 +102,7 @@ namespace NuiDeviceFramework.gestures.implementations
             velocityRight[Y] = rightWristPosition[Y] - rightWristLast[Y];
             velocityRight[Z] = rightWristPosition[Z] - rightWristLast[Z];
             return (
-                    velocityLeft[Y] < 0.0f && //velocity[Z] < 0.0f
+                    velocityLeft[Y] < 0.0f &&
                     velocityRight[Y] < 0.0f &&
                     Math.Abs(leftWristPosition[X] - rightWristPosition[X]) > HANDS_MIN_DISTANCE &&
                     Math.Abs(leftWristPosition[X] - rightWristPosition[X]) < HANDS_MAX_DISTANCE
@@ -122,7 +114,6 @@ namespace NuiDeviceFramework.gestures.implementations
         {
 
             return (
-                //headPosition[Y] < (headInitial[Y] * HEAD_RATIO_THRESHOLD)
                 leftWristPosition[Y] < (leftWristPosition[Y] * HANDS_RATIO_THRESHOLD) &&
                 rightWristPosition[Y] < (rightWristPosition[Y] * HANDS_RATIO_THRESHOLD) &&
                 Math.Abs(leftWristPosition[X] - rightWristPosition[X]) > HANDS_MIN_DISTANCE &&
@@ -157,22 +148,22 @@ namespace NuiDeviceFramework.gestures.implementations
                 if (this.getSkeleton() && this.getJoints())
                 {
                     this.loadTrackedPositions();
-                    //headPosition = this.getTrackedPosition((int)NuiJointType.Head);
+
                     leftWristPosition = this.getTrackedPosition((int)NuiJointType.HandLeft);
                     rightWristPosition = this.getTrackedPosition((int)NuiJointType.HandRight);
 
                     if ((GestureState)this.state() == GestureState.Ready)
                     {
-                        //if (headInitial == null)
+
                         if (leftWristInitial == null || rightWristInitial == null)
                         {
-                            //headInitial = new float[3];
                             leftWristInitial = new float[3];
                             SkeletalGesture.copyPositions(leftWristInitial, leftWristPosition);
 
                             rightWristInitial = new float[3];
                             SkeletalGesture.copyPositions(rightWristInitial, rightWristPosition);
                         }
+
                     }
 
                     if (!this.processNextState())
@@ -183,7 +174,7 @@ namespace NuiDeviceFramework.gestures.implementations
                     }
 
                     Console.WriteLine((GestureState)this.state());
-                    //SkeletalGesture.copyPositions(headLast, headPosition);
+
                     SkeletalGesture.copyPositions(leftWristLast, leftWristPosition);
                     SkeletalGesture.copyPositions(rightWristLast, rightWristPosition);
 
@@ -201,12 +192,19 @@ namespace NuiDeviceFramework.gestures.implementations
         public LowerHands(object d)
             : base(d)
         {
+            // add positions to be tracked and saved on each iteration
             this.addTrackedPosition((int)NuiJointType.Head);
+
+            // state machine state and transition implementation
+
+            // initial state
             this.setInitialState((int)GestureState.None);
+
+            // next state and transition function to get to this next state
             this.addState((int)GestureState.Ready, new TransitionDelegate(isReady), true);
             this.addState((int)GestureState.Lowering, new TransitionDelegate(isLowering), true);
             this.addState((int)GestureState.Final, new TransitionDelegate(isFinal), true);
-            //headInitial = null;
+
             leftWristInitial = null;
             rightWristPosition = null;
 
