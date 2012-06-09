@@ -159,8 +159,8 @@ namespace DemoApp
                 Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", audioGesture, device);
                 Environment.Exit(-1);
             }
-            
-			*/
+            */
+			
 
             
 			Gesture skeletonGestureSL = new SwipeLeft(device);
@@ -169,8 +169,9 @@ namespace DemoApp
             {
                 Console.WriteLine("Could not add the gesture {0} to the device {1}. Unsupported gesture.", skeletonGestureSL, device);
             }
+            
 
-
+            /*
             Gesture skeletonGestureB = new Bow(device);
             if (!gm.Add(skeletonGestureB))
             {
@@ -178,6 +179,7 @@ namespace DemoApp
             }
 			
             Console.WriteLine("You've successfully added a Gesture to the GestureManager!");
+            */
 
             Console.WriteLine("Now the GestureManager will start listening for input.");
             gm.Start();
@@ -208,6 +210,7 @@ namespace DemoApp
         {
             //RunMessagingApplication();
             RunStandaloneTestApplication();
+            Console.ReadLine();
         }
     }
 }
