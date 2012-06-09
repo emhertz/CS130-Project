@@ -33,9 +33,9 @@ namespace NuiDeviceFramework.gestures.implementations
 {
     /* Gesture3 -- Bow
          - Behavior: Bowing motion of head and upper body
-         - Begin: WristRight.X > HipCenter.X by difference INIT_RIGHTHAND_DIST
-         - End: WristRight.X < HipCenter.X by difference END_RIGHTHAND_DIST
-         - Conditions: WristRight in line with HipCenter in Y Direction
+         - Begin: Head is within target rectangle, HEAD_INIT_X_{LO,HI} x HEAD_INIT_Y_{LO, HI}
+         - Transition: Head is moving in direction with decreasing Y and Z components
+         - End: Head is at HEAD_RATIO_THRESHOLD * initial Head Position
        Stream(s) needed: SkeletonData */
 
     public class Bow : SkeletalGesture
@@ -49,10 +49,12 @@ namespace NuiDeviceFramework.gestures.implementations
 
 
         // Constants
-        private const float HEAD_INIT_X_LO = -1.0f; // Right hand extended past right side of hip
-        private const float HEAD_INIT_X_HI = 1.0f; // Right hand extended past right side of hip
-        private const float HEAD_INIT_Y_LO = 0.1f; // Right hand extended past right side of hip
-        private const float HEAD_INIT_Y_HI = 0.8f; // Right hand extended past right side of hip
+
+        // Initial head positions
+        private const float HEAD_INIT_X_LO = -1.0f;
+        private const float HEAD_INIT_X_HI = 1.0f;
+        private const float HEAD_INIT_Y_LO = 0.1f;
+        private const float HEAD_INIT_Y_HI = 0.8f;
 
         private const float HEAD_RATIO_THRESHOLD = 0.5f;
 
